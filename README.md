@@ -1,5 +1,9 @@
-# Conductivity
-This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a pyboard and micropython. Code is provided for 2-pole and 4-pole versions of the conductivity sensor.  The sensor must be calibrated using a solution of known conductivity.  Because the response is not linear across the range of conductivities expected in an estuarine setting, the calibration process needs to include multiple points. A calibration curve can then be fit to these observations.
+# CTD
+This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a pyboard, and MS5803-05 pressure sensor, a Littlefuse PS103J2 NTC thermistor, and micropython. 
+
+Code is provided for 2-pole and 4-pole versions of the conductivity sensor.  The sensor must be calibrated using a solution of known conductivity.  Because the response is not linear across the range of conductivities expected in an estuarine setting, the calibration process needs to include multiple points. A calibration curve can then be fit to these observations.
+
+The thermistor can be wired in parallel with the conductivity sensor, reducing the number of wires required for hooking it up.  However, if wired in parallel, code for reading the thermistor depends on the mode that the conductivity sensor is using, so files are included for the 2-pole and 4-pole configurations of the conductivity sensor.
 
 To install, modify the file logger_ctd.py to reflect whether you prefer to use the 2-pole or 4-pole configuration and to reflect your wiring configuration. The 4-pole version of the code requires the use of four ADC pins, two pins for powering the device, and two pins for I2C communication with the MS5803-05 pressure sensor. To use the code, after making any required modifications, copy all files to an SD card and insert into the SD slot on a pyboard. The program will then run automatically. 
 
