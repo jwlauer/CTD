@@ -1,4 +1,6 @@
-# CTD
+CTD
+===
+
 This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a pyboard, a MS5803-05 pressure sensor, a Littlefuse PS103J2 NTC thermistor, and micropython. 
 
 Code is provided for 2-pole and 4-pole versions of the conductivity sensor.  The methods for interacting with and reading conductivity sensors of these configurations are defined in the conductivity2pole.py and conductivity4pole.py files, respectively.  Both utilize a pseudo-AC method for making the conductivity measurement that involves raising one pole to a voltage near 3.3V, grounding the other, taking an ADC reading, switching the 3.3V and ground pins, and repeating a number of times. For conductivities under around 10,000 uS/m2, the two-pole sensor appears to work, but it exhibits significant drift for higher conductivities.  Since 10,000 uS/m2 is in the middle of the range of conductivities expected in many estuaries, the 4-pole version is recommended for use in those settings.  The 2-pole version may be appropriate in freshwater systems. 
