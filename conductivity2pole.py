@@ -1,3 +1,8 @@
+"""
+A two-pole conductivity sensor containing a thermistor.
+
+"""
+
 import pyb
 from pyb import Pin, ADC
 import time
@@ -6,72 +11,91 @@ import array as arr
 import thermistor_ac
 
 class Cond_sensor:
-    """A two-pole conductivity sensor containing a thermistor.
+    """
+    A class for interacting with a two-pole conductivity sensor and thermistor.
 
     Performs measurement using the analog to digial controller
-    to read values of resistance across the probe and to
+    to read values of voltage drop across the probe and to
     read values from the thermistor.  Also includes methods for
     converting readings to physical values, based on calibration
     parameters specified when instantiated. Requires following
-    import statements:
+    import statements::
+	
         import pyb
         from pyb import Pin, ADC
         import time
         import math
         import array as arr
         import thermistor
-    
-    Attributes:
-        p_1 (:obj:'pyb.Pin(pinid, Pin.OUT_PP)'): Power/ground pin connected
-            to electrode through resistor, on ADC side of conductivity cell
-        p_2 (:obj:'pyb.Pin(pinid, Pin.OUT_PP)'): Power/ground pin connected
-            to electrode through resistor to electrode NOT on ADC side of conductivity cell
-        con_adc (:obj:'pyb.ADC(pinid)'): Adc pin connected between
-            conductivity resistor and conductivity electrode.  On pyboard, ADC can be
-            the following pins (unshielded):  X1,X2,X3,X4,X5,X6,X7,X8,X11,X12,Y11,Y12. Also, the
-            shielded ADC pins are X19,X20,X21,X22.
-        con_resistance (float): Resistance (ohm) of sensing resistors for conductivity
-        therm_adc(:obj:'pyb.ADC(pinid)') = adc pin connected between thermistor ressistor
-            and thermistor
-        therm_resistance (float): Resistance in measurement circuit for 10KOhm Thermistor
-        A (float): Calibration coefficient A
-        B (float): Calibration coefficient B
-        C (float): Calibration coefficient C
-        therm_power (:obj:'pyb.Pin(pinid, Pin.OUT_PP'), optional):  power pin for thermistor
-            used to power thermistor, on ADC side of thermister cell.  Defaults to none (power from 3.3V).
-        therm_ground (:obj:'pyb.Pin(pinid, Pin.OUT_PP'), optional): ground pin for thermistor
-        count1 (float): average value of middle two quartiles of ADC counts for +V applied to resistor
-        count2 (float): average value of middle two quartiles of ADC counts for +V applied to probe
-        R1 (float): resistance computed from count1 
-        R2 (float): resistance computed from count2
-        T: Temperature (degrees C)
-        k: Conductivity (uS/cm)
-        k25: Conductivity at 25 degrees C
-        S: Salinity
-    
-    Example:
-    
-        p1 = Pin('Y3', Pin.OUT_PP)
-        p2 = Pin('Y4', Pin.OUT_PP)
-        t1 = Pin('Y2', Pin.OUT_PP)
-        t2 = Pin('Y5', Pin.OUT_PP)
-        adc1 = ADC('X1')
-        adc2 = ADC('X2')
-        Res = 1000
-        A = 1
-        B = 1
-        C = 1
-        TRes = 10000
-        Sensor1 = cond_sensor(p1,p2,adc1,Res,adc2,TRes,A,B,C,t1)
-        Sensor1.calibrate()
-        #run external calibration to get A,B,C
-        A = 1 #enter correct values here
-        B = 1
-        C = 1
-        Sensor1.measure()
+
+    Parameters
+    ----------
+    p_1 : :obj:'pyb.Pin(pinid, Pin.OUT_PP)'
+        Power/ground pin connected to electrode through resistor, on ADC side of conductivity cell
+    p_2 : :obj:'pyb.Pin(pinid, Pin.OUT_PP)'
+        Power/ground pin connected to electrode through resistor to electrode NOT on ADC side of conductivity cell
+    con_adc : :obj:'pyb.ADC(pinid)'
+        ADC pin connected between conductivity resistor and conductivity electrode.  
+        On pyboard, ADC can be the following pins 
+        (unshielded):  X1,X2,X3,X4,X5,X6,X7,X8,X11,X12,Y11,Y12. Also, the
+        shielded ADC pins are X19,X20,X21,X22.
+    con_resistance : float
+        Resistance (ohms) of sensing resistors for conductivity
+    therm_adc : :obj:'pyb.ADC(pinid)' 
+        ADC pin connected between thermistor resistor and thermistor
+    therm_resistance : float
+        Resistance in measurement circuit for 10KOhm Thermistor
+    A : float
+        Calibration coefficient A
+    B : float
+        Calibration coefficient B
+    C : float
+        Calibration coefficient C
+    therm_power : obj:'pyb.Pin(pinid, Pin.OUT_PP'), optional
+        Power pin for thermistor used to power thermistor, on ADC side of thermister cell.  
+        Defaults to none (power from 3.3V).
+    therm_ground : obj:'pyb.Pin(pinid, Pin.OUT_PP'), optional
+        Ground pin for thermistor. Defaults to none (use if hardwired to ground).
+        
+    Attributes
+    ----------        
+    count1 : float
+        Average value of middle two quartiles of ADC counts for +V applied to resistor
+    count2 : float
+        Average value of middle two quartiles of ADC counts for +V applied to probe
+    R1 : float
+        Apparent resistance of cell computed from count1 
+    R2 : float
+        Apparent resistance of cell computed from count2
+    T : float
+        Temperature (degrees C)
+    k : float
+        Conductivity (uS/cm)
+    S : float
+        Salinity
+
+    Example
+    -------
+    >>> p1 = Pin('Y3', Pin.OUT_PP)
+    >>> p2 = Pin('Y4', Pin.OUT_PP)
+    >>> t1 = Pin('Y2', Pin.OUT_PP)
+    >>> t2 = Pin('Y5', Pin.OUT_PP)
+    >>> adc1 = ADC('X1')
+    >>> adc2 = ADC('X2')
+    >>> Res = 1000
+    >>> A = 1
+    >>> B = 1
+    >>> C = 1
+    >>> TRes = 10000
+    >>> Sensor1 = cond_sensor(p1,p2,adc1,Res,adc2,TRes,A,B,C,t1)
+    >>> Sensor1.calibrate()
+    >>> #run external calibration to get A,B,C
+    >>> A = 1 #enter correct values here
+    >>> B = 1
+    >>> C = 1
+    >>> Sensor1.measure()
+
     """
-    
-    
     def __init__(self,p_1,p_2,con_adc,con_r,therm_adc,therm_r,A,B,C,therm_p=None,therm_g=None):
         self.p_1 = p_1
         self.p_2 = p_2
@@ -88,39 +112,55 @@ class Cond_sensor:
         self.p_2.low()
 
     def conductivity(self,r2,A,B,C):
-        """Apply the sensor-specific conductivity calibration equation.
+        """
+        Apply the sensor-specific conductivity calibration equation.
 
         Compute a sensor-specific value of conductivity from measured cell resistance
         and calibration values. Returns a sensor-specific value of conductivity
-        Using the non-linear form for k that best fits our calibration data
+        Using the non-linear form for k that best fits our calibration data. 
         Parameters A, B, and C are all sensor-specific parameters that must
         be found by calibration.   
         
-        Parameters:
-        r2 (float): Apparent resistance of the solution
-        when the power is applied to electrode connected directly
-        to the power pin.
-        A (float):  Calibration coefficient A 
-        B (float):  Calibration coefficient B 
-        C (float):  Calibration coefficient C 
+        Parameters
+        ----------
+        r2 : float
+            Apparent resistance of the solution when the power is applied to electrode connected 
+            directly to the power pin.
+        A : float
+            Calibration coefficient A 
+        B : float
+            Calibration coefficient B 
+        C : float
+            Calibration coefficient C 
 
-        Returns:
-        float: Calibrated conductivity
+        Returns
+        -------
+        float
+            Calibrated conductivity.
+                
         """
         k = 10**A*(r2-B)**C
         return k   
 
     def salinity(self,T,k):
-        """Salinity computation for seawater and estuarine water.      
+        """
+        Compute salinity for seawater and estuarine water.      
+        
         Salinity computation is from Miller, Bradford, and Peters,
         USGS Water Supply Paper 2311.    
         
-        Parameters: 
-        T (float): Temperature (degrees C)
-        k (float): Conductance (mS/cm) 
+        Parameters
+        ----------      
+        T : float
+            Temperature (degrees C)
+        k : float
+            Conductance (mS/cm) 
 
-        Returns:
-        float: Salinity (parts per thousand)
+        Returns
+        -------
+        float
+            Salinity (parts per thousand)
+                
         """
         B0 = 0.13855E1
         B1 = -0.46485668E-1
@@ -136,35 +176,59 @@ class Cond_sensor:
         return salinity
             
     def k25(self,k,T):
-        '''Estimate of conductivity at standard temperature of 25C, for KCl or fresh water only.  Not for seawater.
+        """
+        Calculate conductivity at standard temperature of 25C, for KCl or fresh water (not seawater).
+        
         Given by USGS Water Supply Paper and Pawlowicz 2008.
-        '''
+        
+        """
         return k*(1/(1+0.0191*(T-25)))
     
     def TDS(self,k25):
-        '''Estimate of total dissolved solids from conductivity at 25C, from Pawlowicz 2008, which says the coefficient varies widely.'''
+        """
+        Calculate total dissolved solids from conductivity at 25C, from Pawlowicz 2008, which says the coefficient varies widely.
+        """
         TDS = 0.65*k25
         return TDS
 
     def measure(self, saveflag = False,n = 100,on1 = 100, off1 = 100, on2 = 100, off2 = 100): #take a reading
-        ''' Performs a measurement of conductivity across a two-pole probe.
+        """
+        Perform a measurement of conductivity across a two-pole probe.
         
-        Parameters:
-        saveflag: flag to determine if output is saved for calibration, default false
-        n (int): Number of adc readings to take for the measurement, default = 1000
-        on1: time in microseconds that power pin 1 is on before taking a reading, default = 0
-        off1: time in microseconds that power pin 1 is turned off before turning on power pin, default = 2000 2
-        on2: time in microseconds that power pin 2 is on before taking a reading, default = 1
-        off2: time in microseconds that power pin 2 is turned off before turning on power pin, default = 0
-        
-        
-        Returns:
-        tuple containing (count1, resistance1, count2, resistance2, temperature, conductivity)
-        
-        Sets:
-        Also sets the value for temperature, conductivity, counts, and resistances
-        '''
-        
+        Parameters
+        ----------
+        saveflag : boolean, optional
+            Flag to determine if output is saved for calibration, default false
+        n : int, optional
+            Number of adc readings to take for the measurement, default = 100
+        on1 : int, optional
+            Time in microseconds that power pin 1 is on before taking a reading, default = 100
+        off1 : int, optional
+            Time in microseconds that power pin 1 is turned off before turning on power pin, default = 100
+        on2 : int, optional
+            Time in microseconds that power pin 2 is on before taking a reading, default = 100
+        off2 : int,optional
+            Time in microseconds that power pin 2 is turned off before turning on power pin, default = 100
+    
+        Returns
+        -------
+        count1 : int
+            Count from ADC1.
+        resistance1 : float
+            Computed resistance from ADC1.
+        count2 : int
+            Count from ADC2.
+        resistance2 : float
+            Computed restance from ADC2.
+        temperature : float
+            Temperature (degress C).
+        conductivity : float
+            Conductivity.
+            
+        Note
+        ----
+        Also sets the value for temperature, conductivity, salinity, counts, and resistances
+        """        
         meas1 = arr.array('l',[0]*n)
         meas2 = arr.array('l',[0]*n)
         read1_us = arr.array('l',[0]*n)
@@ -198,9 +262,15 @@ class Cond_sensor:
         return(self.count1, self.r1, self.count2, self.r2, self.T, self.k)
 
     def calibrate(self):
-        name = input('Enter file name: ')
+        """
+        Record calibration data.
+
+        Prompts user to enter data about calibration standard, then makes measurement and 
+        saves results to user-specified file.
+        """
+        fname = input('Enter file name: ')
         headerline = 'Sonde,Count1,Computed R1,Count2,Computed R2,Temperature\r\n'
-        f = open(name,'w')
+        f = open(fname,'w')
         f.write(headerline)
         f.close()
 
@@ -211,7 +281,7 @@ class Cond_sensor:
             self.measure()
             textline = ('%s,%s,%s,%s,%s,%s\r\n' % (k_cal,self.count1,self.r1,self.count2,self.r2,self.T))
             print(textline)
-            f = open(name,'a')
+            f = open(fname,'a')
             print(f.write(textline))
             f.close()
             time.sleep(0.5)
@@ -228,7 +298,6 @@ B = 1
 C = 1
 TRes = 20000
 Sensor1 = Cond_sensor(p1,p2,adc1,Res,adc2,TRes,A,B,C,t1)
-
 
 p1 = Pin('X6', Pin.OUT_PP)
 p2 = Pin('X5', Pin.OUT_PP)
@@ -264,7 +333,7 @@ adc1 = ADC('X11')
 adc2 = ADC('X12')
 Res = 1000
 A = 1
-B = 1
+B = 1 
 C = 1
 TRes = 20000
 Sensor4 = Cond_sensor(p1,p2,adc1,Res,adc2,TRes,A,B,C,t1)

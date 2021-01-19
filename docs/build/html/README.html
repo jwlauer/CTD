@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; CTD 0.9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CTD" href="modules.html" />
+    <link rel="prev" title="Welcome to CTD’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CTD
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">CTD</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CTD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/README.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a pyboard, a MS5803-05 pressure sensor, a Littlefuse PS103J2 NTC thermistor, and micropython.</p>
+<p>Code is provided for 2-pole and 4-pole versions of the conductivity sensor.  The methods for interacting with and reading conductivity sensors of these configurations are defined in the conductivity2pole.py and conductivity4pole.py files, respectively.  Both utilize a pseudo-AC method for making the conductivity measurement that involves raising one pole to a voltage near 3.3V, holding the other pin low (i.e., at 0V), taking an ADC reading, switching the 3.3V and 0V pins, and repeating a number of times. For conductivities under around 10,000 uS/m2, the two-pole sensor appears to work, but it exhibits significant drift for higher conductivities.  Since 10,000 uS/m2 is in the middle of the range of conductivities expected in many estuaries, the 4-pole version is recommended for use in those settings.  The 2-pole version may be appropriate in freshwater systems.</p>
+<p>The thermistor can be wired in parallel with the conductivity sensor, reducing the number of wires required for hooking it up.  However, if wired in parallel, it is necessary to operate in an alternating current mode in order to prevent polarization on the conductivity electrodes. The thermistor_ac.py file can be used regardless of the wiring configuration.</p>
+<p>To install, modify the file logger_ctd.py to reflect whether you prefer to use the 2-pole or 4-pole configuration and to reflect your wiring configuration. All pin definitions are specified in that file. The 4-pole version of the code requires the use of four ADC pins, two pins for powering the conductivity sensor, two pins for powering the MS5803-05 pressure sensor, and two pins for I2C communication with the MS5803-05 pressure sensor. The two-pole version requires two fewer pins.  To use the code, after making any required modifications, copy all files to an SD card and insert into the SD slot on a pyboard. The program will then run automatically.</p>
+<p>The logging file places the device in the low-power wait state (not deep sleep) that results in an average current consumption of around 1-2 mA. An LED flashes periodically during operation. The logging file can be modified by placing the device in deep sleep, but this proved unreliable because the device sometimes did not mount the SD card upon waking, thereby terminating the logging cycle.  This could be addressed in a future version by calling the pyboard’s watchdog timer. There are notes in logger_ctd.py indicating where this can be enabled–but the main loop in that program would need to be modified.</p>
+<p>The sensor must be calibrated using a solution of known conductivity.  Because the response is not linear across the range of conductivities expected in an estuarine setting, the calibration process needs to include multiple points. A calibration curve can then be fit to these observations. Python code is provided in the “calibration” folder for doing the curve fitting.</p>
+<p>Tested with MicroPython 1.10 on a pyboard v1.1.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="CTD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to CTD’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Wes Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

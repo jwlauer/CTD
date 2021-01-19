@@ -1,31 +1,37 @@
 def MS5803(i2c, power_pin=None, ground_pin=None):
-    """ A function for reading pressure and temperature from an MS5803 sensor.
+    """ A micropython function for reading pressure and temperature from an MS5803 sensor.
     
-    The function assumes that the MS5803 is hooked up according to instructions at
-    https://thecavepearlproject.org/2014/03/27/adding-a-ms5803-02-high-resolution-pressure-sensor/.
+    The function assumes that the MS5803 is hooked up according to instructions at 
+    the `cave pearl project <https://thecavepearlproject.org/2014/03/27/adding-a-ms5803-02-high-resolution-pressure-sensor/>`_.
     Power and ground should be connected through a 100 nf (104) decoupling capacitor, and CSB
-    should be pulled high using a 10 kOhm resistor.
+    should be pulled high using a 10 kOhm resistor.  Tested with MS5803_BA. 
+    Code modified from code originally developed for raspberry pi at the `control everything community <https://github.com/ControlEverythingCommunity/MS5803-05BA/blob/master/Python/MS5803_05BA.py>`_.
     
-    Code modified from https://github.com/ControlEverythingCommunity/MS5803-05BA/blob/master/Python/MS5803_05BA.py
-    Distributed with a free-will license.
-    Use it any way you want, profit or free, provided it fits in the licenses of its associated works.
-    MS5803_05BA
-    
-    Args:
-        i2c: an I2C bus object
-        power_pin: the pin object representing the pin used to power the MS5803 (optional)
-        ground_pin: the pin object representing the pin used to ground the MS5803 (optional)
+    Parameters
+    ----------
+	i2c : :obj:'machine.I2C'
+		An I2C bus object
+	power_pin : :obj:'machine.PIN', optional
+		Pin object representing the pin used to power the MS5803 
+	ground_pin : :obj:'machine.PIN', optional
+		Pin object representing the pin used to ground the MS5803 (optional)
 
-    Returns:
-        Tuple containing pressure (hPa) and temperature (degrees C).
+    Returns
+    -------
+    pressure : float
+        Pressure in hPa.
+    temperature : float
+        Temperature in degrees C.
+         
+    Example
+    -------
+    >>> from machine import I2C, Pin
+    >>> import pressure
+    >>> i2c = I2C(scl='X9', sda='X10', freq = 100000)
+    >>> power_pin = Pin('Y7', Pin.OUT_PP)
+    >>> ground_pin = Pin('Y8', Pin.OUT_PP)
+    >>> [pres, ctemp] = pressure.MS5803(i2c, power_pin, ground_pin)
     
-    Example:
-        import pressure
-        from machine import I2C, Pin
-        i2c = I2C(scl='X9', sda='X10', freq = 100000)
-        power_pin = Pin('Y7', Pin.OUT_PP)
-        ground_pin = Pin('Y8', Pin.OUT_PP)
-        [pres, ctemp] = pressure.MS5803(i2c, power_pin, ground_pin)
     """
     import time
     

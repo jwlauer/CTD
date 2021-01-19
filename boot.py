@@ -1,5 +1,4 @@
-# boot.py -- run on boot-up
-# can run arbitrary Python, but best to keep it minimal
+"""Imports basic modules at bootup"""
 
 import machine
 import pyb

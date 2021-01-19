@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>conductivity2pole module &mdash; CTD 0.9 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="conductivity4pole module" href="conductivity4pole.html" />
+    <link rel="prev" title="boot module" href="boot.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CTD
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">CTD</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boot.html">boot module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">conductivity2pole module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conductivity4pole.html">conductivity4pole module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger_ctd.html">logger_ctd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">pressure module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermistor_ac.html">thermistor_ac module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CTD</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">CTD</a> &raquo;</li>
+        
+      <li>conductivity2pole module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/conductivity2pole.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-conductivity2pole">
+<span id="conductivity2pole-module"></span><h1>conductivity2pole module<a class="headerlink" href="#module-conductivity2pole" title="Permalink to this headline">¶</a></h1>
+<p>A two-pole conductivity sensor containing a thermistor.</p>
+<dl class="py class">
+<dt id="conductivity2pole.Cond_sensor">
+<em class="property">class </em><code class="sig-prename descclassname">conductivity2pole.</code><code class="sig-name descname">Cond_sensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p_1</span></em>, <em class="sig-param"><span class="n">p_2</span></em>, <em class="sig-param"><span class="n">con_adc</span></em>, <em class="sig-param"><span class="n">con_r</span></em>, <em class="sig-param"><span class="n">therm_adc</span></em>, <em class="sig-param"><span class="n">therm_r</span></em>, <em class="sig-param"><span class="n">A</span></em>, <em class="sig-param"><span class="n">B</span></em>, <em class="sig-param"><span class="n">C</span></em>, <em class="sig-param"><span class="n">therm_p</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">therm_g</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for interacting with a two-pole conductivity sensor and thermistor.</p>
+<p>Performs measurement using the analog to digial controller
+to read values of voltage drop across the probe and to
+read values from the thermistor.  Also includes methods for
+converting readings to physical values, based on calibration
+parameters specified when instantiated. Requires following
+import statements:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyb</span>
+<span class="kn">from</span> <span class="nn">pyb</span> <span class="kn">import</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">ADC</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">array</span> <span class="k">as</span> <span class="nn">arr</span>
+<span class="kn">import</span> <span class="nn">thermistor</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_1</strong> (<em>:obj:'pyb.Pin</em><em>(</em><em>pinid</em><em>, </em><em>Pin.OUT_PP</em><em>)</em><em>'</em>) – Power/ground pin connected to electrode through resistor, on ADC side of conductivity cell</p></li>
+<li><p><strong>p_2</strong> (<em>:obj:'pyb.Pin</em><em>(</em><em>pinid</em><em>, </em><em>Pin.OUT_PP</em><em>)</em><em>'</em>) – Power/ground pin connected to electrode through resistor to electrode NOT on ADC side of conductivity cell</p></li>
+<li><p><strong>con_adc</strong> (<em>:obj:'pyb.ADC</em><em>(</em><em>pinid</em><em>)</em><em>'</em>) – ADC pin connected between conductivity resistor and conductivity electrode.
+On pyboard, ADC can be the following pins
+(unshielded):  X1,X2,X3,X4,X5,X6,X7,X8,X11,X12,Y11,Y12. Also, the
+shielded ADC pins are X19,X20,X21,X22.</p></li>
+<li><p><strong>con_resistance</strong> (<em>float</em>) – Resistance (ohms) of sensing resistors for conductivity</p></li>
+<li><p><strong>therm_adc</strong> (<em>:obj:'pyb.ADC</em><em>(</em><em>pinid</em><em>)</em><em>'</em>) – ADC pin connected between thermistor resistor and thermistor</p></li>
+<li><p><strong>therm_resistance</strong> (<em>float</em>) – Resistance in measurement circuit for 10KOhm Thermistor</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – Calibration coefficient A</p></li>
+<li><p><strong>B</strong> (<em>float</em>) – Calibration coefficient B</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – Calibration coefficient C</p></li>
+<li><p><strong>therm_power</strong> (<em>obj:'pyb.Pin</em><em>(</em><em>pinid</em><em>, </em><em>Pin.OUT_PP'</em><em>)</em><em>, </em><em>optional</em>) – Power pin for thermistor used to power thermistor, on ADC side of thermister cell.
+Defaults to none (power from 3.3V).</p></li>
+<li><p><strong>therm_ground</strong> (<em>obj:'pyb.Pin</em><em>(</em><em>pinid</em><em>, </em><em>Pin.OUT_PP'</em><em>)</em><em>, </em><em>optional</em>) – Ground pin for thermistor. Defaults to none (use if hardwired to ground).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.count1">
+<code class="sig-name descname">count1</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.count1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average value of middle two quartiles of ADC counts for +V applied to resistor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.count2">
+<code class="sig-name descname">count2</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.count2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average value of middle two quartiles of ADC counts for +V applied to probe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.R1">
+<code class="sig-name descname">R1</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.R1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apparent resistance of cell computed from count1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.R2">
+<code class="sig-name descname">R2</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.R2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apparent resistance of cell computed from count2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.T">
+<code class="sig-name descname">T</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temperature (degrees C)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.k">
+<code class="sig-name descname">k</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conductivity (uS/cm)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="conductivity2pole.Cond_sensor.S">
+<code class="sig-name descname">S</code><a class="headerlink" href="#conductivity2pole.Cond_sensor.S" title="Permalink to this definition">¶</a></dt>
+<dd><p>Salinity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="s1">&#39;Y3&#39;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT_PP</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="s1">&#39;Y4&#39;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT_PP</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t1</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="s1">&#39;Y2&#39;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT_PP</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t2</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="s1">&#39;Y5&#39;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT_PP</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adc1</span> <span class="o">=</span> <span class="n">ADC</span><span class="p">(</span><span class="s1">&#39;X1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adc2</span> <span class="o">=</span> <span class="n">ADC</span><span class="p">(</span><span class="s1">&#39;X2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Res</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TRes</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Sensor1</span> <span class="o">=</span> <span class="n">cond_sensor</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">,</span><span class="n">adc1</span><span class="p">,</span><span class="n">Res</span><span class="p">,</span><span class="n">adc2</span><span class="p">,</span><span class="n">TRes</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">t1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Sensor1</span><span class="o">.</span><span class="n">calibrate</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#run external calibration to get A,B,C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#enter correct values here</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Sensor1</span><span class="o">.</span><span class="n">measure</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="conductivity2pole.Cond_sensor.TDS">
+<code class="sig-name descname">TDS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k25</span></em><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor.TDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate total dissolved solids from conductivity at 25C, from Pawlowicz 2008, which says the coefficient varies widely.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="conductivity2pole.Cond_sensor.calibrate">
+<code class="sig-name descname">calibrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor.calibrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record calibration data.</p>
+<p>Prompts user to enter data about calibration standard, then makes measurement and
+saves results to user-specified file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="conductivity2pole.Cond_sensor.conductivity">
+<code class="sig-name descname">conductivity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r2</span></em>, <em class="sig-param"><span class="n">A</span></em>, <em class="sig-param"><span class="n">B</span></em>, <em class="sig-param"><span class="n">C</span></em><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor.conductivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the sensor-specific conductivity calibration equation.</p>
+<p>Compute a sensor-specific value of conductivity from measured cell resistance
+and calibration values. Returns a sensor-specific value of conductivity
+Using the non-linear form for k that best fits our calibration data.
+Parameters A, B, and C are all sensor-specific parameters that must
+be found by calibration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r2</strong> (<em>float</em>) – Apparent resistance of the solution when the power is applied to electrode connected
+directly to the power pin.</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – Calibration coefficient A</p></li>
+<li><p><strong>B</strong> (<em>float</em>) – Calibration coefficient B</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – Calibration coefficient C</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Calibrated conductivity.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="conductivity2pole.Cond_sensor.k25">
+<code class="sig-name descname">k25</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">T</span></em><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor.k25" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate conductivity at standard temperature of 25C, for KCl or fresh water (not seawater).</p>
+<p>Given by USGS Water Supply Paper and Pawlowicz 2008.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="conductivity2pole.Cond_sensor.measure">
+<code class="sig-name descname">measure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">saveflag</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">on1</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">off1</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">on2</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">off2</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor.measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a measurement of conductivity across a two-pole probe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>saveflag</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Flag to determine if output is saved for calibration, default false</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of adc readings to take for the measurement, default = 100</p></li>
+<li><p><strong>on1</strong> (<em>int</em><em>, </em><em>optional</em>) – Time in microseconds that power pin 1 is on before taking a reading, default = 100</p></li>
+<li><p><strong>off1</strong> (<em>int</em><em>, </em><em>optional</em>) – Time in microseconds that power pin 1 is turned off before turning on power pin, default = 100</p></li>
+<li><p><strong>on2</strong> (<em>int</em><em>, </em><em>optional</em>) – Time in microseconds that power pin 2 is on before taking a reading, default = 100</p></li>
+<li><p><strong>off2</strong> (<em>int</em><em>,</em><em>optional</em>) – Time in microseconds that power pin 2 is turned off before turning on power pin, default = 100</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>count1</strong> (<em>int</em>) – Count from ADC1.</p></li>
+<li><p><strong>resistance1</strong> (<em>float</em>) – Computed resistance from ADC1.</p></li>
+<li><p><strong>count2</strong> (<em>int</em>) – Count from ADC2.</p></li>
+<li><p><strong>resistance2</strong> (<em>float</em>) – Computed restance from ADC2.</p></li>
+<li><p><strong>temperature</strong> (<em>float</em>) – Temperature (degress C).</p></li>
+<li><p><strong>conductivity</strong> (<em>float</em>) – Conductivity.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Also sets the value for temperature, conductivity, salinity, counts, and resistances</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="conductivity2pole.Cond_sensor.salinity">
+<code class="sig-name descname">salinity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">T</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="headerlink" href="#conductivity2pole.Cond_sensor.salinity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute salinity for seawater and estuarine water.</p>
+<p>Salinity computation is from Miller, Bradford, and Peters,
+USGS Water Supply Paper 2311.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float</em>) – Temperature (degrees C)</p></li>
+<li><p><strong>k</strong> (<em>float</em>) – Conductance (mS/cm)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Salinity (parts per thousand)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="conductivity4pole.html" class="btn btn-neutral float-right" title="conductivity4pole module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="boot.html" class="btn btn-neutral float-left" title="boot module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Wes Lauer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
