@@ -35,40 +35,59 @@ def log(t):
     that the board will continue to log even if an error is encountered, but it can
     cause unexpected results if the user wishes to interact with the board over serial.
 
-    """
+    """ 
     
     #from machine import WDT
     #wdt = machine.WDT(timeout=30000)
+    red = pyb.LED(1)
+    green = pyb.LED(2)
+    yellow = pyb.LED(3)
+    blue = pyb.LED(4)
+    
+    green.on()
+    blue.on()
+    #wait 10 seconds to allow user to jump in
+    time.sleep(10)
+    green.off()
+    blue.off()
+    
+    #write file header
+    outputtxt = 'date,time,pressure(mbar),temperature(C)\r\n'
+    try:
+        f = open('datalogCTD.txt','a')
+        f.write(outputtxt)
+        f.close()
+    except:
+        #briefly turn all leds on if fails to write
+        red.on()
+        green.on()
+        yellow.on()
+        blue.on()
+        time.sleep(1)
+        red.off()
+        green.off()
+        blue.off()
+        yellow.off()
+    
+    start_time = time.time()
     
     while True:
-            #keep track of elapsed time
-        start_time = time.time()
-        log_time = start_time + t
+
         try:
             wdt.feed()
         except:
             pass
-            
-        
-        #define clock object, set next wakeup time (in milliseconds) and get the time
-        rtc = pyb.RTC()
-        datetime = rtc.datetime()
-
-        #light up LED to let user know it is on
-        led = pyb.LED(2)
-        led.on()
-
-        #wait 15 seconds to allow user to jump in
-        time.sleep(5)
-
+                  
         #flash LED to let user know reading is being taken
-        led.off()
+        green.off()
         time.sleep(0.5)
-        led.on()
+        green.on()
 
         #define clock object, set next wakeup time (in milliseconds) and get the time
         rtc = pyb.RTC()
         datetime = rtc.datetime()
+        log_time = start_time + t
+        start_time = log_time
 
         try:
             wdt.feed()
@@ -93,6 +112,9 @@ def log(t):
             pres = -999
             ctemp = -999
             print('Pressure reading failed')
+            yellow.on()
+            time.sleep(1)
+            yellow.off()
         try:
             wdt.feed()
         except:
@@ -107,14 +129,16 @@ def log(t):
             f.write(outputtxt)
             f.close()
         except:
-            led1 = pyb.LED(1)
-            led1.on()
-            led2.on()
-            led3 = pyb.LED(3)
-            led.on()
-            led4 = pyb.LED(4)
-            led.on()
+            #briefly turn all leds on if fails to write
+            red.on()
+            green.on()
+            yellow.on()
+            blue.on()
             time.sleep(1)
+            red.off()
+            green.off()
+            blue.off()
+            yellow.off()
             
         sw = pyb.Switch()    
         while time.time() < log_time:    
@@ -122,12 +146,12 @@ def log(t):
                 wdt.feed()
             except:
                 pass          
-            led.on()
+            green.on()
             time.sleep(0.005)
-            led.off()
+            green.off()
             if sw():
                 pyb.usb_mode(None)
-                pyb.LED(3).on()
+                yellow.on()
                 time.sleep(5)
                 pyb.usb_mode('VCP+MSC')
                 try:
