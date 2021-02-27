@@ -1,14 +1,14 @@
 Overview
 ============
 
-This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a pyboard, a MS5803-05 pressure sensor, a Littlefuse PS103J2 NTC thermistor, and micropython.
+This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a PyBoard_[https://store.micropython.org/product/PYBv1.1H], a MS5803-05 pressure sensor, a Littlefuse PS103J2 NTC thermistor, and micropython.  It contains Gerber files for a minimal circuitboard for mounting the MS5803 sensor and for simplifying wiring for the electrical conductivity sensor.  It also contains STL files for 3-d printing an optional housing for the electrodes and/or MS5803 sensor. 
 
 Full documentation is avilable at https://ctd.readthedocs.io/en/latest/index.html.
 
-Code is provided for 2-pole and 4-pole versions of the conductivity sensor.  The methods for interacting with and reading conductivity sensors of these configurations are defined in the conductivity2pole.py and conductivity4pole.py files, respectively.  Both utilize a pseudo-AC method for making the conductivity measurement that involves raising one pole to a voltage near 3.3V, grounding the other, taking an ADC reading, switching the 3.3V and ground pins, and repeating a number of times. For conductivities under around 10,000 μS/m\ :sup:`2`, the two-pole sensor appears to work, but it exhibits significant drift for higher conductivities.  Since 10,000 μS/m\ :sup:`2` is in the middle of the range of conductivities expected in many estuaries, the 4-pole version is recommended for use in those settings.  The 2-pole version may be appropriate in freshwater systems. 
+Code
+----
 
-:math:`{\alpha}` 
-:superscript:`2`
+Code is provided for 2-pole and 4-pole versions of the conductivity sensor.  The methods for interacting with and reading conductivity sensors of these configurations are defined in the conductivity2pole.py and conductivity4pole.py files, respectively.  Both utilize a pseudo-AC method for making the conductivity measurement that involves raising one pole to a voltage near 3.3V, grounding the other, taking an ADC reading, switching the 3.3V and ground pins, and repeating a number of times. For conductivities under around 10,000 μS/m\ :sup:`2`, the two-pole sensor appears to work, but it exhibits significant drift for higher conductivities.  Since 10,000 μS/m\ :sup:`2` is in the middle of the range of conductivities expected in many estuaries, the 4-pole version is recommended for use in those settings.  The 2-pole version may be appropriate in freshwater systems. 
 
 The thermistor can be wired in parallel with the conductivity sensor, reducing the number of wires required for hooking it up.  However, if wired in parallel, it is necessary to operate in an alternating current mode in order to prevent polarization on the conductivity electrodes. The thermistor.py file can be used regardless of the wiring configuration. In addition, the temperature sensor on the MS5803 sensor can be used for logging temperature instead of using the thermistor.
 
