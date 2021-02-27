@@ -1,3 +1,3 @@
 This folder includes 3d print files for the cap.
 
-![](EC_Board.PNG)
+![](CDT_Cap_1.5_inch_pipe.stl)
