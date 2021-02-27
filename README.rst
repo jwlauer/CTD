@@ -5,6 +5,9 @@ This repository includes code for developing a simple conductivity, temperature,
 
 Full documentation is avilable at https://ctd.readthedocs.io/en/latest/index.html.
 
+`Python
+<http://www.python.org/>`_
+
 Code
 ----
 
