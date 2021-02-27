@@ -1,7 +1,7 @@
 Overview
 ============
 
-This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a PyBoard_[https://store.micropython.org/product/PYBv1.1H], a MS5803-05 pressure sensor, a Littlefuse PS103J2 NTC thermistor, and micropython.  It contains Gerber files for a minimal circuitboard for mounting the MS5803 sensor and for simplifying wiring for the electrical conductivity sensor.  It also contains STL files for 3-d printing an optional housing for the electrodes and/or MS5803 sensor. 
+This repository includes code for developing a simple conductivity, temperature, depth (CTD) sensor using a [PyBoard](https://store.micropython.org/product/PYBv1.1H), a [MS5803-05BA](https://www.amsys-sensor.com/products/pressure-sensor/ms5803-series-digital-absolute-pressure-sensors-up-to-1-2-5-7-14-30-bar/) pressure sensor, a [Littlefuse PS103J2](https://www.littelfuse.com/~/media/electronics/datasheets/leaded_thermistors/littelfuse_leaded_thermistors_interchangeable_thermistors_standard_precision_ps_datasheet.pdf.pdf) NTC thermistor, and [MicroPython](https://micropython.org/).  It contains Gerber files for a minimal circuitboard for mounting the MS5803 sensor and for simplifying wiring for the electrical conductivity sensor.  It also contains STL files for 3-d printing an optional housing for the electrodes and/or MS5803 sensor. 
 
 Full documentation is avilable at https://ctd.readthedocs.io/en/latest/index.html.
 
