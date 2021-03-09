@@ -75,9 +75,9 @@ def log(t):
         #define conductivity sensor 
         p_1 = Pin('X3', Pin.OUT_PP)  #connected directly to electrode
         p_2 = Pin('X4', Pin.OUT_PP)  #connected to resistor connected to electrode
-        adc_current = ADC('X7')
         adc_p_3 = ADC('X5')          #connected to middle pole not adjacent to
         adc_p_4 = ADC('X6')          #connected to middle pole adjacent to resistor
+        adc_current = ADC('X7')
         adc_therm = ADC('X8')
         con_resistance = 250
         therm_resistance = 20000
