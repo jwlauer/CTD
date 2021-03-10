@@ -26,24 +26,22 @@ class cond_sensor:
     
     Parameters
     ----------
-    p_1 : :obj:'machine.Pin(pinid, Pin)'
+    gpio1 : :obj:'machine.Pin(pinid, Pin)'
         Power/ground pin connected directly to current balancing resistor R1
-    p_2 : :obj:'machine.Pin(pinid, Pin)'
+    gpio2 : :obj:'machine.Pin(pinid, Pin)'
         Power/ground pin connected to current measuring resistor R1
-    adc_p_3 : :obj:'machine.ADC(pinid)'
-        ADC pin connected to pole 3 (sensing pole farthest from current measuring resistor)
-    adc_p_4 : :obj:'machine.ADC(pinid)'
-        ADC pin connected to pole 4 (sensing pole closest to current measuring resistor)
-    adc_current : :obj:'machine.ADC(pinid)'
+    adc1 : :obj:'machine.ADC(pinid)'
+        ADC pin connected to electrode 3 (sensing pole farthest from current measuring resistor)
+    adc2 : :obj:'machine.ADC(pinid)'
+        ADC pin connected to electrod 4 (sensing pole closest to current measuring resistor)
+    adc3_current : :obj:'machine.ADC(pinid)'
         ADC pin connected between conductivity resistor and conductivity electrode
     con_resistance: float
         Resistance (ohm) of current measuring resistor 
-    A : float
-        Calibration coefficient A
-    B : float
-        Calibration coefficient B
-    C : float
-        Calibration coefficient C
+    cell_const : float
+        Cell constant (1/cm), found through calibration
+    b : float
+        Intercept in linear calibration equation
        
     Attributes
     ----------     
@@ -61,15 +59,15 @@ class cond_sensor:
     Example
     -------
     >>> import conductivity4pole_pico
-    >>> p_1 = Pin(19,Pin.OUT)
-    >>> p_2 = Pin(20,Pin.OUT)
-    >>> adc_current = ADC(28)
-    >>> adc_p_3 = ADC(26)
-    >>> adc_p_4 = ADC(27)
-    >>> Res = 250
+    >>> gpio1 = Pin(19,Pin.OUT)
+    >>> gpio2 = Pin(20,Pin.OUT)
+    >>> adc1 = ADC(26)
+    >>> adc2 = ADC(27)
+    >>> adc3_current = ADC(28)
+    >>> res = 250
     >>> cell_const = 1
     >>> b = 0
-    >>> Sensor1 = conductivity4pole_pico.cond_sensor(p_1,p_2,adc_current,adc_p_3,adc_p_4,Res,cell_const, b)
+    >>> Sensor1 = conductivity4pole_pico.cond_sensor(gpio1,gpio2,adc1,adc2,adc3_current,res,cell_const,b)
     >>> Sensor1.calibrate()
     >>> #run external calibration to get cell constant and intercept b
     >>> Sensor1.cell_const = 1 #enter correct values here
@@ -79,20 +77,18 @@ class cond_sensor:
     """
     
         
-    def __init__(self, p_1, p_2, adc_current, adc_p_3, adc_p_4, con_resistance, cell_const, b):
+    def __init__(self, gpio1, gpio2, adc1, adc2, adc3_current, con_resistance, cell_const, b):
         
-        self.p_1 = p_1
-        self.p_2 = p_2
-        self.p_1.low()
-        self.p_2.low()
-        self.adc_current = adc_current
-        self.adc_p_3 = adc_p_3
-        self.adc_p_4 = adc_p_4
+        self.gpio1 = gpio1
+        self.gpio2 = gpio2
+        self.adc1 = adc1
+        self.adc2 = adc2
+        self.adc3_current = adc3_current
         self.con_resistance = con_resistance
         self.cell_const = cell_const
         self.b = b
-        self.p_1.low()
-        self.p_2.low()
+        self.gpio1.low()
+        self.gpio2.low()
 
     def conductivity(self,r2,cell_const,b):
         """Apply the sensor-specific conductivity calibration equation.
@@ -203,7 +199,6 @@ class cond_sensor:
         ----
         Also sets the value for temperature, conductivity, counts, and resistances
         """
-        starttime = time.ticks_us()
         
         #pre-allocate arrays for counts to be read into
         imeas1 = arr.array('l',[0]*n)
@@ -213,24 +208,27 @@ class cond_sensor:
         p4meas1 = arr.array('l',[0]*n)
         p4meas2 = arr.array('l',[0]*n)
 
-        #read1_us = arr.array('l',[0]*n)
-        #read2_us = arr.array('l',[0]*n)
-        #startticks = time.ticks_us()
+
+        starttime = time.ticks_us()
         for i in range(n):
-            self.p_1.high()
+            self.gpio1.high()
             time.sleep_us(on1)
-            imeas1[i] = (self.adc_current.read_u16() >> 4)
-            p3meas1[i] = (self.adc_p_3.read_u16() >> 4)
-            p4meas1[i] = (self.adc_p_4.read_u16() >> 4)
-            self.p_1.low()
+            imeas1[i] = (self.adc3_current.read_u16() >> 4)
+            p3meas1[i] = (self.adc1.read_u16() >> 4)
+            p4meas1[i] = (self.adc2.read_u16() >> 4)
+            self.gpio1.low()
             time.sleep_us(off1)
-            self.p_2.high()
+            
+            self.gpio2.high()
             time.sleep_us(on2)
-            imeas2[i] = (self.adc_current.read_u16() >> 4)
-            p3meas2[i] = (self.adc_p_3.read_u16() >> 4)
-            p4meas2[i] = (self.adc_p_4.read_u16() >> 4)
-            self.p_2.low()
+            imeas2[i] = (self.adc3_current.read_u16() >> 4)
+            p3meas2[i] = (self.adc1.read_u16() >> 4)
+            p4meas2[i] = (self.adc2.read_u16() >> 4)
+            self.gpio2.low()
             time.sleep_us(off2)
+
+        endtime = time.ticks_us()
+        elapsed_time = endtime - starttime            
 
         #pre-allocate arrays for current, voltage drop across poles, and resistance, for flow each direction
         i1 = arr.array('f',[0]*n)
@@ -253,8 +251,8 @@ class cond_sensor:
                 R1[i] = -999999
                 R2[i] = -999999
                 print('Error in resistance computation')
-                
-
+        
+        #clean data by sampling middle two quartiles       
         upper_index = math.ceil(3*n/4)
         lower_index = math.floor(n/4)
         sampled_length = (upper_index - lower_index)
@@ -274,8 +272,6 @@ class cond_sensor:
         #self.k = self.conductivity(self.resistance2,self.A,self.B,self.C)
         #self.S = self.salinity(self.T, self.k)
         #self.k25 = self.k25(self.k,self.T)
-        endtime = time.ticks_us()
-        elapsed_time = endtime - starttime            
             
         if printflag:
             for i in range (n):

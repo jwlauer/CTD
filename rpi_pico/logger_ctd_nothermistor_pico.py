@@ -38,12 +38,7 @@ def log(t):
 
     """
     
-    #from machine import WDT
-    #wdt = machine.WDT(timeout=30000)
-       #from machine import WDT
-    #wdt = machine.WDT(timeout=30000)
-    green = Pin(25, Pin.OUT)
-    
+    green = Pin(25, Pin.OUT)   
     green.value(1)
 
     #wait 10 seconds to allow user to jump in
@@ -76,32 +71,28 @@ def log(t):
         start_time = log_time
         
         #define conductivity sensor 
-        p_1 = Pin(19, Pin.OUT)  #connected directly to electrode
-        p_2 = Pin(20, Pin.OUT)  #connected to resistor connected to electrode
-        adc_p_3 = ADC(26)          #connected to middle pole not adjacent to
-        adc_p_4 = ADC(27)          #connected to middle pole adjacent to resistor
-        adc_current = ADC(28)
-        #        adc_therm = ADC(28)        #Not used in pico 2040, but may be available when picos with for ADCs are released-dummy pin
+        gpio1 = Pin(19, Pin.OUT)  #connected directly to electrode
+        gpio2 = Pin(20, Pin.OUT)  #connected to resistor connected to electrode
+        adc1 = ADC(26)          #connected to middle pole not adjacent to
+        adc2 = ADC(27)          #connected to middle pole adjacent to resistor
+        adc3_current = ADC(28)
+        #adc_therm = ADC(28)        #Not used in pico 2040, but may be available on other 2040 boards
         con_resistance = 250
-        #        therm_resistance = 20000
-        cell_const = 1     #run external calibration to get A
-        b = 0     #run external calibration to get B
-#        C = 1     #run external calibration to get C
-#        conductivity_sensor = conductivity4pole.cond_sensor(p_1,p_2,adc_current,adc_p_3,adc_p_4,con_resistance,adc_therm,therm_resistance,A,B,C)
-        conductivity_sensor = conductivity4pole_pico.cond_sensor(p_1,p_2,adc_current,adc_p_3,adc_p_4,con_resistance, cell_const, b)
+        #therm_resistance = 20000
+        cell_const = 1    
+        b = 0     
+        conductivity_sensor = conductivity4pole_pico.cond_sensor(gpio1,gpio2,adc1,adc2,adc3_current,con_resistance,cell_const,b)
 
-        #define pressure sensor in Pressure.py.  Connect SCL to X9, SDA to X10, VCC to Y7, GND to Y8
+        #define pressure sensor in Pressure.py.  
         pres_power = Pin(18, Pin.OUT)
-        #pres_gnd = Pin('Y8', Pin.OUT_PP)   #not needed since ground pin is in line i2c pins
+        #pres_gnd = Pin(19, Pin.OUT_PP)   #not needed if ground pin directly connected to gnd
         i2c = machine.I2C(0, scl=Pin(17), sda=Pin(16), freq = 100000)
                     
         #read values from sensors
         try:
-            [r1, r2, icount1, probe3count1, probe4count1, icount2, probe3count2, probe4count2] = conductivity_sensor.measure()
-            #[r1, r2] = conductivity_sensor.measure()
+            [r1, r2, icount1, probe3count1, probe4count1, icount2, probe3count2, probe4count2] = conductivity_sensor.measure(n = 50)
         except:
             [r1, r2, icount1, probe3count1, probe4count1, icount2, probe3count2, probe4count2] = [-999,-999,-999,-999,-999,-999,-999,-999,-999,-999]
-            #[r1, r2] = [-999,-999]
         
         try:
             [pres, ctemp] = pressure.MS5803(i2c, pres_power)
