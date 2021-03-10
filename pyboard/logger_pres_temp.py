@@ -9,12 +9,10 @@ import time
 
 def log(t):
     """ A function for logging data from an MS5803 sensor to file at a regular interval.
-
     The function saves a line of text at each interval representing conductivity, temperature,
     pressure. The device then goes into standby mode for interval t.  After interval t, the
     device awakes as if from a hard reset.  The function is designed to be called from
     main.py. Puts device in standby mode upon completion.
-
     Parameters
     ----------
     t: int
@@ -34,7 +32,6 @@ def log(t):
     reset the board after the watchdog timer interval unless the timer is fed. This ensures
     that the board will continue to log even if an error is encountered, but it can
     cause unexpected results if the user wishes to interact with the board over serial.
-
     """ 
     
     #from machine import WDT
