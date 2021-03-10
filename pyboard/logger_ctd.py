@@ -73,19 +73,19 @@ def log(t):
         datetime = rtc.datetime()
 
         #define conductivity sensor 
-        p_1 = Pin('X3', Pin.OUT_PP)  #connected directly to electrode
-        p_2 = Pin('X4', Pin.OUT_PP)  #connected to resistor connected to electrode
-        adc_current = ADC('X7')
-        adc_p_3 = ADC('X5')          #connected to middle pole not adjacent to
-        adc_p_4 = ADC('X6')          #connected to middle pole adjacent to resistor
-        adc_therm = ADC('X8')
+        gpio1 = Pin('X3', Pin.OUT_PP)  #connected directly to electrode
+        gpio2 = Pin('X4', Pin.OUT_PP)  #connected to resistor connected to electrode
+        adc1 = ADC('X5')          #connected to middle pole not adjacent to
+        adc2 = ADC('X6')          #connected to middle pole adjacent to resistor
+        adc3_current = ADC('X7')
+        adc4_therm = ADC('X8')
         con_resistance = 250
         therm_resistance = 20000
         cell_const = 1     #run external calibration to get A
         b = 0     #run external calibration to get B
-        t_1 = Pin('X3', Pin.OUT_PP)
-        t_2 = Pin('X4', Pin.OUT_PP)
-        conductivity_sensor = conductivity4pole.cond_sensor(p_1,p_2,adc_current,adc_p_3,adc_p_4,con_resistance,adc_therm,therm_resistance,cell_const,b,t_1,t_2)
+        t_1 = gpio1
+        t_2 = gpio2
+        conductivity_sensor = conductivity4pole.cond_sensor(gpio1,gpio2,adc1,adc2,adc3_current,adc4_therm,con_resistance,therm_resistance,cell_const,b,t_1,t_2)
 
         try:
             wdt.feed()

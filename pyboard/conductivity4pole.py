@@ -28,28 +28,26 @@ class cond_sensor:
     
     Parameters
     ----------
-    p_1 : :obj:'pyb.Pin(pinid, Pin.OUT_PP)'
+    gpio1 : :obj:'pyb.Pin(pinid, Pin.OUT_PP)'
         Power/ground pin connected directly to current balancing resistor R1
-    p_2 : :obj:'pyb.Pin(pinid, Pin.OUT_PP)'
+    gpio2 : :obj:'pyb.Pin(pinid, Pin.OUT_PP)'
         Power/ground pin connected to current measuring resistor R1
-    adc_current : :obj:'pyb.ADC(pinid)'
-        ADC pin connected between conductivity resistor and conductivity electrode
-    adc_p_3 : :obj:'pyb.ADC(pinid)'
+    adc1 : :obj:'pyb.ADC(pinid)'
         ADC pin connected to pole 3 (sensing pole farthest from current measuring resistor)
-    adc_p_4 : :obj:'pyb.ADC(pinid)'
+    adc2 : :obj:'pyb.ADC(pinid)'
         ADC pin connected to pole 4 (sensing pole closest to current measuring resistor)
+    adc3_current : :obj:'pyb.ADC(pinid)'
+        ADC pin connected between conductivity resistor and conductivity electrode
+    adc4_therm : :obj:'pyb.ADC(pinid)'
+        ADC pin connected between thermistor resistor and thermistor
     con_resistance: float
         Resistance (ohm) of current measuring resistor 
-    adc_therm : :obj:'pyb.ADC(pinid)'
-        ADC pin connected between thermistor resistor and thermistor
     therm_resistance : float
         Resistance in measurement circuit for 10KOhm Thermistor
-    A : float
-        Calibration coefficient A
-    B : float
-        Calibration coefficient B
-    C : float
-        Calibration coefficient C
+    cell_const : float
+        Cell constant (1/cm) of conductivity probe (found by calibration)
+    b : float
+        Intercept in linear calibration equation
     therm_power : obj:'pyb.Pin(pinid, Pin.OUT_PP'), optional
         Power pin used to power thermistor.  Defaults to none (power from 3.3V).
     therm_ground : :obj:'pyb.Pin(pinid, Pin.OUT_PP'), optional
@@ -70,20 +68,21 @@ class cond_sensor:
     
     Example
     -------
-    >>> p_1 = Pin('Y3', Pin.OUT_PP)
-    >>> p_2 = Pin('Y4', Pin.OUT_PP)
-    >>> t_1 = Pin('Y2', Pin.OUT_PP)
-    >>> adc_current = ADC('X1')
-    >>> adc_p_3 = ADC('X2')
-    >>> adc_p_4 = ADC('X3')
-    >>> adc_therm = ADC('X4')
-    >>> Res = 1000
+    >>> gpio1 = Pin('X3', Pin.OUT_PP)
+    >>> gpio2 = Pin('X4', Pin.OUT_PP)
+    >>> t_1 = gpio1  #may be same pin as connected to charged electrode
+    >>> t_2 = gpio2  #may be same pin as connected to charged electrode
+    >>> adc1 = ADC('X5')
+    >>> adc2 = ADC('X6')
+    >>> adc3_current = ADC('X7')
+    >>> adc4_therm = ADC('X8')
+    >>> res = 250
     >>> cell_const = 1
     >>> b = 0
-    >>> TRes = 10000
-    >>> Sensor1 = cond_sensor(p_1,p_2,adc_current,adc_p_3,adc_p_4,Res,adctherm,TRes,A,B,C,t_1)
+    >>> tres = 20000
+    >>> Sensor1 = cond_sensor(gpio1,gpio2,adc1,adc2,adc3_current,adc4_therm,res,tres,cell_const,b,t_1,t_2)
     >>> Sensor1.calibrate()
-    >>> #run external calibration to get A,B,C
+    >>> #run external calibration to get cell constant and b
     >>> cell_const = 1 #enter correct values here
     >>> b = 0
     >>> Sensor1.measure()
@@ -91,24 +90,24 @@ class cond_sensor:
     """
     
         
-    def __init__(self, p_1, p_2, adc_current, adc_p_3, adc_p_4, con_resistance, adc_therm, therm_resistance,cell_const,b,therm_power = None, therm_ground = None):
+    def __init__(self,gpio1,gpio2,adc1,adc2,adc3_current,adc4_therm,con_resistance,therm_resistance,cell_const,b,therm_power = None,therm_ground = None):
         
-        self.p_1 = p_1
-        self.p_2 = p_2
-        self.p_1.low()
-        self.p_2.low()
-        self.adc_current = adc_current
-        self.adc_p_3 = adc_p_3
-        self.adc_p_4 = adc_p_4
+        self.gpio1 = gpio1
+        self.gpio2 = gpio2
+        self.gpio1.low()
+        self.gpio2.low()
+        self.adc1 = adc1
+        self.adc2 = adc2
+        self.adc3_current = adc3_current
+        self.adc4_therm = adc4_therm
         self.con_resistance = con_resistance
-        self.adc_therm = adc_therm
         self.therm_resistance = therm_resistance
         self.cell_const = cell_const
         self.b = b
         self.therm_power = therm_power
         self.therm_ground = therm_ground
-        self.p_1.low()
-        self.p_2.low()
+        self.gpio1.low()
+        self.gpio2.low()
 
     def conductivity(self,r2,cell_const,b):
         """Apply the sensor-specific conductivity calibration equation.
@@ -233,19 +232,22 @@ class cond_sensor:
         #read2_us = arr.array('l',[0]*n)
         #startticks = time.ticks_us()
         for i in range(n):
-            self.p_1.high()
+            #first measurement at initial polarity
+            self.gpio1.high()
             time.sleep_us(on1)
-            imeas1[i] = self.adc_current.read()
-            p3meas1[i] = self.adc_p_3.read()
-            p4meas1[i] = self.adc_p_4.read()
-            self.p_1.low()
+            imeas1[i] = self.adc3_current.read()
+            p3meas1[i] = self.adc1.read()
+            p4meas1[i] = self.adc2.read()
+            self.gpio1.low()
             time.sleep_us(off1)
-            self.p_2.high()
+            
+            #second measurement at reverse polarity
+            self.gpio2.high()
             time.sleep_us(on2)
-            imeas2[i] = self.adc_current.read()
-            p3meas2[i] = self.adc_p_3.read()
-            p4meas2[i] = self.adc_p_4.read()
-            self.p_2.low()
+            imeas2[i] = self.adc3_current.read()
+            p3meas2[i] = self.adc1.read()
+            p4meas2[i] = self.adc2.read()
+            self.gpio2.low()
             time.sleep_us(off2)
         
         endtime = time.ticks_us()
@@ -286,7 +288,7 @@ class cond_sensor:
         probe4count2 = sum(sorted(p4meas2)[lower_index:upper_index])/sampled_length
                
         #call thermistor reading, with 400 adc readings per measurement
-        self.T = thermistor_ac.temperature(self.adc_therm, self.therm_power, self.therm_ground, self.therm_resistance, 400)        
+        self.T = thermistor_ac.temperature(self.adc4_therm, self.therm_power, self.therm_ground, self.therm_resistance, 400)        
         ave_res = (self.resistance1 + self.resistance2)/2
         self.k = self.conductivity(ave_res,self.cell_const,self.b)
         self.S = self.salinity(self.T, self.k)
