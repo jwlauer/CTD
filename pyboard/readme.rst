@@ -1,0 +1,1 @@
+This folder contains code for use with a pyboard. Because the pyboard includes many ADC pins, the code incorporates an NTC thermistor for measuring temperature, rather than using the somewhat less accurate MS5803.
