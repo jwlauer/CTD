@@ -17,14 +17,7 @@ class cond_sensor:
     (when excited by a square wave applied to two outer electrodes) 
     and to read values from the thermistor.  Also includes methods for
     converting readings to physical values, based on calibration
-    parameters specified when instantiated. Requires following import statements::
-	
-        import pyb
-        from pyb import Pin, ADC
-        import time
-        import math
-        import array as arr
-        import thermistor
+    parameters specified when instantiated. 
     
     Parameters
     ----------
