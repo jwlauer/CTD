@@ -118,6 +118,8 @@ def log(t):
             flash(20,0.2)
             
         while time.time() < log_time:          
-            flash(1, 0.005)
-            machine.lightsleep(1)
+            flash(1, 0.05)
+            green.value(0)
+            time.sleep(1)
+            #machine.lightsleep(1)
             

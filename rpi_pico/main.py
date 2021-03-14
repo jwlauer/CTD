@@ -20,5 +20,5 @@ except:
         green.value(1)
         time.sleep(1)
         green.value(0)
-        time.sleep(1)
-    machine.lightsleep(log_interval)
+        time.sleep(1)   
+machine.lightsleep(log_interval)
