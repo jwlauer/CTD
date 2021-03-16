@@ -123,9 +123,9 @@ def log(t):
         #write results to file
         outputtxt = ('%s/%s/%s,%s:%s:%s,' % (datetime[0], datetime[1], datetime[2], datetime[4], datetime[5], datetime[6]))
         outputtxt += ('%5.2f,%5.2f,' % (r1, r2))
-        outputtxt += ('%s,' % T)
-        outputtxt += ('%s, %s, %s, %s, %s, %s,' % (icount1, probe3count1, probe4count1, icount2, probe3count2, probe4count2))
-        outputtxt += ('%s\r\n' % pres)
+        outputtxt += ('%s,%s,' % (ctemp, pres))
+        #outputtxt += ('%s, %s, %s, %s, %s, %s,' % (icount1, probe3count1, probe4count1, icount2, probe3count2, probe4count2))
+        outputtxt += ('%s\r\n' % T)
         print (outputtxt)
         try:
             f = open('datalogCTD.txt','a')
