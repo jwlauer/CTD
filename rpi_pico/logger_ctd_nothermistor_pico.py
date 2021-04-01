@@ -65,6 +65,7 @@ def log(t):
     
     while True:
         #long single flash LED to let user know reading is being taken
+        machine.freq(125000000)
         flash(1,1)
         
         log_time = start_time + t
@@ -116,7 +117,8 @@ def log(t):
             flash(3,0.5)
         except:
             flash(20,0.2)
-            
+        
+        machine.freq(10000000)
         while time.time() < log_time:          
             flash(1, 0.05)
             green.value(0)
