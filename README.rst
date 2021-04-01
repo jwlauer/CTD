@@ -17,7 +17,7 @@ Use of Code
 
 To install, modify the file logger_ctd.py to reflect the EC configuration (two pole or four pole) and temperature measurement source. All pin definitions are specified in that file. The four-pole version of the code requires the use of four ADC pins, two pins for powering the conductivity sensor, two pins for powering the MS5803-05 pressure sensor, and two pins for I2C communication with the MS5803-05 pressure sensor. The two-pole version requires two fewer pins.  After making any required modifications, copy all files to the microcontroller. If using a PyBoard, all that is necessary is to copy the files to an SD card and insert into the SD slot. The program will then run automatically when the board is reset and will save the datalog file to the SD card. 
 
-While the code has not been tested on other microcontrollers, it should be useable on any microcontroller with at least accurate ADC pins (four if using the NTC thermistor). 
+While the code has not been tested on other microcontrollers, it should be useable on any microcontroller with at least three accurate ADC pins (four if using the NTC thermistor). 
 
 Deployment
 ----------
