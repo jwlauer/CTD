@@ -31,7 +31,7 @@ Interpretation of Measurements
 
 The sensor returns the apparent DC resistance between electrodes, computed using R = 3.3V / I, where I is the current estimated across the current sensing resistor. This resistance is computed for each direction of current flow and then averaged. While this DC resistance is highly correlated with electrical conductivity, it also depends in part on the geometry of the electrodes, which can vary from sensor to sensor. This means that a separate calibration curve must be developed for each sensor using a solution of known conductivity.  The calibration curve is often represented as an inverse relationship between EC and R, EC = 1/(R*k), where R is the average resistance returned by the sensor (Ohms) and k is the cell constant of the sensor (cm \ :sup:`2`) that is determined by calibration. The code includes functions to simplify collection of calibration data points. 
 
-Code was tested with MicroPython 1.10 on a PyBoard v1.1 or MicroPython v1.14 2021/03/01 unstable release (using rp2-pico-20210401-unstable-v1.14-128-gca3d51f12) on Raspberry Pi Pico 2040.
+Code was tested with MicroPython 1.10 on a PyBoard v1.1 or MicroPython v1.14 2021/04/01 unstable release (using rp2-pico-20210401-unstable-v1.14-128-gca3d51f12) on Raspberry Pi Pico 2040.
 
 
 
