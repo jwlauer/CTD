@@ -52,7 +52,7 @@ def log(t):
             time.sleep(t)
             
     #write file header
-    outputtxt = 'date,time,R1(ohm),R2(ohm),temp(C),pres(mbar)\r\n'
+    outputtxt = 'time(s),R1(ohm),R2(ohm),temp(C),pres(mbar)\r\n'
     try:
         f = open('datalogCTD.txt','a')
         f.write(outputtxt)
@@ -64,9 +64,9 @@ def log(t):
     start_time = time.time()   
     
     while True:
-        #long single flash LED to let user know reading is being taken
+        #single flash LED to let user know reading is being taken
         machine.freq(125000000)
-        flash(1,1)
+        flash(1,0.25)
         
         log_time = start_time + t
         start_time = log_time
@@ -105,16 +105,16 @@ def log(t):
         
         #write results to file
         #outputtxt = ('%s/%s/%s,%s:%s:%s,' % (datetime[0], datetime[1], datetime[2], datetime[4], datetime[5], datetime[6]))
-        outputtxt = ('%s,' % start_time)
+        outputtxt = ('%s,' % (start_time-1609459241))
         outputtxt += ('%5.2f,%5.2f,' % (r1, r2))
-        outputtxt += ('%s,' % ctemp)
-        outputtxt += ('%s\r\n' % pres)
+        outputtxt += ('%5.2f,' % ctemp)
+        outputtxt += ('%5.1f\r\n' % pres)
         print (outputtxt)
         try:
             f = open('datalogCTD.txt','a')
             f.write(outputtxt)
             f.close()
-            flash(3,0.5)
+            flash(5,0.05)
         except:
             flash(20,0.2)
         
