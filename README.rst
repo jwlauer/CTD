@@ -24,7 +24,7 @@ Deployment
 
 The logging file places the device in the low-power wait state (not deep sleep) that results in an average current consumption of around 1-2 mA. An LED flashes periodically during operation. The logging file can be modified to place the device in deep sleep, but this proved unreliable because the device sometimes did not mount the SD card upon waking, thereby terminating the logging cycle.  This could be addressed in a future version by calling the PyBoard's watchdog timer. There are notes in logger_ctd.py indicating where this can be enabled--but the main loop in that program would need to be modified.
 
-Date and time are obtained from the PyBoard's Real Time Clock (RTC), which can be calibrated to an accuracy of better than several minutes per year. Setting and calibrating the clock is covered in the `MicroPython docs <https://docs.micropython.org/en/latest/library/pyb.RTC.html#pyb-rtc>`__. The PyBoard also includes a "VBACK" pin for adding a backup battery. A CR2032 battery can keep the clock running for many months (probalby years).  
+Date and time are obtained from the PyBoard's Real Time Clock (RTC), which can be calibrated to an accuracy of better than several minutes per year. Setting and calibrating the clock is covered in the `MicroPython docs <https://docs.micropython.org/en/latest/library/pyb.RTC.html#pyb-rtc>`__. The PyBoard also includes a "VBACK" pin for adding a backup battery. A CR2032 battery can keep the clock running for many months (probably years).  
 
 Interpretation of Measurements
 ------------------------------
